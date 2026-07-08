@@ -1,0 +1,36 @@
+name: ETF Holdings Daily Tracker
+
+on:
+  schedule:
+    # 매일 UTC 12:00 = 한국시간 저녁 9시 (미국 전일 종가 기준 holdings 파일이 올라온 뒤)
+    - cron: "0 12 * * *"
+  workflow_dispatch: {}   # Actions 탭에서 "Run workflow" 버튼으로 수동 실행도 가능
+
+permissions:
+  contents: write
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 라이브러리 설치
+        run: pip install requests pandas lxml
+
+      - name: ETF 보유현황 수집
+        run: python etf_tracker.py
+
+      - name: 결과 커밋
+        run: |
+          git config user.name "etf-tracker-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "chore: holdings update $(date -u +%Y-%m-%d)"
+          git push
