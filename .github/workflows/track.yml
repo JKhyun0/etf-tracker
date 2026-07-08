@@ -2,9 +2,9 @@ name: ETF Holdings Daily Tracker
 
 on:
   schedule:
-    # 매일 UTC 12:00 = 한국시간 저녁 9시 (미국 전일 종가 기준 holdings 파일이 올라온 뒤)
+    # 매일 UTC 12:00 = 한국시간 저녁 9시
     - cron: "0 12 * * *"
-  workflow_dispatch: {}   # Actions 탭에서 "Run workflow" 버튼으로 수동 실행도 가능
+  workflow_dispatch: {}   # Actions 탭에서 수동 실행 가능
 
 permissions:
   contents: write
@@ -26,6 +26,12 @@ jobs:
 
       - name: ETF 보유현황 수집
         run: python etf_tracker.py
+
+      - name: 텔레그램 알림 전송
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python telegram_notify.py
 
       - name: 결과 커밋
         run: |
