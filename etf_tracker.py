@@ -35,10 +35,19 @@ LATEST_JSON = os.path.join(DATA_DIR, "latest.json")
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+        "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
     ),
-    "Accept": "*/*",
-    "Accept-Language": "en-US,en;q=0.9",
+    "Accept": ("text/html,application/xhtml+xml,application/xml;q=0.9,"
+               "text/csv,application/csv,*/*;q=0.8"),
+    "Accept-Language": "en-US,en;q=0.9,ko;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "Cache-Control": "no-cache",
 }
 
 # 운용사 공식 다운로드 주소 (1순위) + 예비 주소 (2순위: stockanalysis.com)
@@ -55,8 +64,12 @@ VANECK_SMH_PAGE = "https://www.vaneck.com/us/en/investments/semiconductor-etf-sm
 BACKUP_URL = "https://stockanalysis.com/etf/{t}/holdings/"
 
 
-def _get(url, timeout=60):
-    r = requests.get(url, headers=HEADERS, timeout=timeout)
+def _get(url, timeout=60, referer=None):
+    h = dict(HEADERS)
+    if referer:
+        h["Referer"] = referer
+        h["Sec-Fetch-Site"] = "same-origin"
+    r = requests.get(url, headers=h, timeout=timeout)
     r.raise_for_status()
     return r
 
@@ -75,9 +88,31 @@ def _to_float(x):
 
 # ---------------------------------------------------------------
 # 1) SOXX — iShares 공식 CSV
+#    (iShares가 CSV 주소를 종종 바꾸므로, 제품 페이지에서
+#     현재 유효한 CSV 링크를 매번 자동으로 찾아낸다)
 # ---------------------------------------------------------------
+ISHARES_PAGE = "https://www.ishares.com/us/products/239705/ishares-phlx-semiconductor-etf"
+
+
+def _discover_ishares_csv():
+    import html as _html
+    page = _get(ISHARES_PAGE).text
+    m = re.search(
+        r'["\'](/us/products/239705/[^"\']*?\.ajax\?fileType=csv[^"\']*)["\']', page)
+    if m:
+        return "https://www.ishares.com" + _html.unescape(m.group(1))
+    return None
+
+
 def fetch_soxx():
-    text = _get(ISHARES_SOXX_CSV).text
+    url = None
+    try:
+        url = _discover_ishares_csv()
+    except Exception as e:
+        print(f"[안내] iShares 페이지에서 CSV 링크 탐색 실패({e}) → 기본 주소 사용")
+    text = _get(url or ISHARES_SOXX_CSV).text
+    if "Ticker," not in text and url is None:
+        raise ValueError("iShares CSV에서 holdings 표를 찾지 못함 (링크 탐색도 실패)")
     lines = text.splitlines()
 
     # 파일 상단 메타데이터에서 기준일 추출: 예) Fund Holdings as of,"Jul 06, 2026"
@@ -117,13 +152,18 @@ def fetch_soxx():
 # 2) SOXQ — Invesco 공식 CSV
 # ---------------------------------------------------------------
 def fetch_soxq():
-    text = _get(INVESCO_SOXQ_CSV).text
+    text = _get(
+        INVESCO_SOXQ_CSV,
+        referer="https://www.invesco.com/us/financial-products/etfs/product-detail"
+                "?audienceType=Investor&ticker=SOXQ",
+    ).text
     df = pd.read_csv(io.StringIO(text))
     df.columns = [c.strip() for c in df.columns]
 
     def col(*cands):
-        for c in df.columns:
-            for k in cands:
+        # 후보 순서를 우선시: 'Holding Ticker'가 'Fund Ticker'보다 먼저 매칭되도록
+        for k in cands:
+            for c in df.columns:
                 if k.lower() in c.lower():
                     return c
         return None
@@ -161,10 +201,78 @@ def fetch_soxq():
 
 
 # ---------------------------------------------------------------
-# 3) SMH — VanEck 페이지 표 파싱 (실패 시 백업 소스 사용)
+# 3) SMH — VanEck 페이지에 내장된 JSON 데이터에서 추출
+#    (페이지가 자바스크립트 렌더링이라 HTML 표가 없고,
+#     대신 페이지 소스 안 JSON 블록에 전체 보유 데이터가 들어 있음)
 # ---------------------------------------------------------------
+def _hunt_holdings_in_json(obj, depth=0):
+    """중첩 JSON 안에서 '보유종목 리스트'처럼 생긴 구조를 재귀 탐색"""
+    if depth > 12:
+        return None
+    if isinstance(obj, list) and len(obj) >= 10 and all(isinstance(x, dict) for x in obj[:5]):
+        keys = set().union(*(set(x.keys()) for x in obj[:5]))
+        kl = {k.lower() for k in keys}
+        has_tkr = any(("ticker" in k or "symbol" in k) for k in kl)
+        has_wt = any(("weight" in k or "netassets" in k or "percent" in k) for k in kl)
+        if has_tkr and has_wt:
+            return obj
+    if isinstance(obj, dict):
+        for v in obj.values():
+            r = _hunt_holdings_in_json(v, depth + 1)
+            if r is not None:
+                return r
+    elif isinstance(obj, list):
+        for v in obj:
+            r = _hunt_holdings_in_json(v, depth + 1)
+            if r is not None:
+                return r
+    return None
+
+
+def _key_like(d, *cands):
+    for k in d.keys():
+        for c in cands:
+            if c in k.lower():
+                return k
+    return None
+
+
 def fetch_smh():
     html = _get(VANECK_SMH_PAGE).text
+
+    # 1차: 페이지에 내장된 JSON (__NEXT_DATA__ 등 스크립트 블록)
+    for m in re.finditer(r'<script[^>]*>\s*({.*?})\s*</script>', html, re.DOTALL):
+        blob = m.group(1)
+        if '"ticker"' not in blob.lower() and '"symbol"' not in blob.lower():
+            continue
+        try:
+            data = json.loads(blob)
+        except Exception:
+            continue
+        found = _hunt_holdings_in_json(data)
+        if found:
+            sample = found[0]
+            k_tkr = _key_like(sample, "ticker", "symbol")
+            k_name = _key_like(sample, "name", "holding", "security")
+            k_wt = _key_like(sample, "weight", "netassets", "percent")
+            k_sh = _key_like(sample, "shares", "quantity")
+            k_mv = _key_like(sample, "marketvalue", "market_value")
+            rows = []
+            for rec in found:
+                tkr = str(rec.get(k_tkr, "")).strip()
+                if not tkr:
+                    continue
+                rows.append({
+                    "ticker": tkr,
+                    "name": str(rec.get(k_name, "")).strip() if k_name else "",
+                    "weight_pct": _to_float(rec.get(k_wt)),
+                    "shares": _to_float(rec.get(k_sh)) if k_sh else None,
+                    "market_value": _to_float(rec.get(k_mv)) if k_mv else None,
+                })
+            if rows:
+                return None, rows, "VanEck (vaneck.com 공식 페이지 내장 데이터)"
+
+    # 2차: 혹시 서버 렌더링된 HTML 표가 있는 경우
     tables = pd.read_html(io.StringIO(html))
     for df in tables:
         cols = [str(c).lower() for c in df.columns]
@@ -172,8 +280,8 @@ def fetch_smh():
             df.columns = [str(c) for c in df.columns]
 
             def col(*cands):
-                for c in df.columns:
-                    for k in cands:
+                for k in cands:
+                    for c in df.columns:
                         if k.lower() in c.lower():
                             return c
                 return None
@@ -213,8 +321,8 @@ def fetch_backup(etf):
             df.columns = [str(c) for c in df.columns]
 
             def col(*cands):
-                for c in df.columns:
-                    for k in cands:
+                for k in cands:
+                    for c in df.columns:
                         if k.lower() in c.lower():
                             return c
                 return None
