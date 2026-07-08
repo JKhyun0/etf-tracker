@@ -40,7 +40,7 @@ HEADERS = {
     "Accept": ("text/html,application/xhtml+xml,application/xml;q=0.9,"
                "text/csv,application/csv,*/*;q=0.8"),
     "Accept-Language": "en-US,en;q=0.9,ko;q=0.8",
-    "Accept-Encoding": "gzip, deflate, br",
+    # Accept-Encoding은 명시하지 않음: requests가 풀 수 있는 방식만 자동 협상
     "Connection": "keep-alive",
     "Upgrade-Insecure-Requests": "1",
     "Sec-Fetch-Dest": "document",
@@ -70,6 +70,8 @@ def _get(url, timeout=60, referer=None):
         h["Referer"] = referer
         h["Sec-Fetch-Site"] = "same-origin"
     r = requests.get(url, headers=h, timeout=timeout)
+    print(f"[요청] {url[:80]} → {r.status_code} "
+          f"{r.headers.get('Content-Type','?')[:40]} {len(r.content):,}bytes")
     r.raise_for_status()
     return r
 
