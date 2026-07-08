@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>반도체 ETF 수급 트래커 — SOXX · SOXQ · SMH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.3/chart.umd.min.js"></script>
+<style>
+  :root{
+    --paper:#F5F6F8; --card:#FFFFFF; --ink:#131C2B; --sub:#5B6472;
+    --line:#E3E6EB; --up:#C0392B; --down:#1F5FBF; /* 한국식: 상승=적색, 하락=청색 */
+    --mu:#D64545; --amd:#1F5FBF; --nvda:#1E8E5A; --etc:#8A5FBF;
+    --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+
+  header h1{font-size:21px;font-weight:700;letter-spacing:-.01em}
+  header .sub{color:var(--sub);font-size:13px;margin-top:4px}
+  header .stamp{font-family:var(--mono);font-size:12px;color:var(--sub);margin-top:2px}
+
+  /* 시그니처: 일간 비중 변화 테이프 */
+  .tape{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 6px}
+  .tape .chip{background:var(--card);border:1px solid var(--line);border-radius:6px;
+    padding:7px 11px;font-family:var(--mono);font-size:12.5px;display:flex;gap:8px;align-items:baseline}
+  .tape .chip b{font-weight:600}
+  .tape .chip .d{font-weight:600}
+  .d.pos{color:var(--up)} .d.neg{color:var(--down)} .d.flat{color:var(--sub)}
+
+  .controls{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin:22px 0 14px}
+  .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+  .seg button{border:0;background:none;padding:8px 16px;font:inherit;font-size:13.5px;font-weight:500;color:var(--sub);cursor:pointer}
+  .seg button.on{background:var(--ink);color:#fff}
+  .tickers{display:flex;gap:6px;flex-wrap:wrap}
+  .tickers button{border:1px solid var(--line);background:var(--card);border-radius:20px;
+    padding:5px 13px;font-family:var(--mono);font-size:12.5px;cursor:pointer;color:var(--sub)}
+  .tickers button.on{border-color:currentColor;color:var(--ink);font-weight:600;box-shadow:inset 0 0 0 1px currentColor}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:18px}
+  .card h2{font-size:14px;font-weight:600;color:var(--sub);margin-bottom:14px;letter-spacing:.02em}
+  .chartbox{position:relative;height:340px}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{color:var(--sub);font-weight:500;text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono);font-size:12.5px}
+  th:first-child,td:first-child{text-align:left}
+  td.name{font-family:inherit;color:var(--sub);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  tr.hl td{background:#FBF4EC}
+
+  .empty{padding:60px 20px;text-align:center;color:var(--sub);font-size:14px}
+  footer{color:var(--sub);font-size:12px;margin-top:26px;line-height:1.8}
+  footer .src{font-family:var(--mono);font-size:11.5px}
+  @media (max-width:640px){ .chartbox{height:260px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>반도체 ETF 수급 트래커</h1>
+    <div class="sub">SOXX · SOXQ · SMH 공식 보유종목(holdings) 일별 기록 — 비중(%)과 보유주식수 시계열</div>
+    <div class="stamp" id="stamp">데이터 불러오는 중…</div>
+  </header>
+
+  <div class="tape" id="tape"></div>
+
+  <div class="controls">
+    <div class="seg" id="etfSeg"></div>
+    <div class="tickers" id="tickerBtns"></div>
+  </div>
+
+  <div class="card">
+    <h2 id="wTitle">비중 (%) 추이</h2>
+    <div class="chartbox"><canvas id="wChart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2 id="sTitle">보유주식수 추이</h2>
+    <div class="chartbox"><canvas id="sChart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2 id="tTitle">최신 보유 현황 (전 기록일 대비 변화)</h2>
+    <div style="overflow-x:auto"><table id="tbl"></table></div>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const ETFS = ["SOXX","SOXQ","SMH"];
+const DEFAULT_TICKERS = ["MU","AMD"];
+const PALETTE = ["#D64545","#1F5FBF","#1E8E5A","#8A5FBF","#C77F1A","#2A8F9D","#7A6A52","#B04E8E"];
+let DATA=[], etf="SOXX", picked=new Set(DEFAULT_TICKERS), wChart=null, sChart=null;
+
+const fmt = (v,d=2)=> v==null||isNaN(v)?"–":Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtInt = v=> v==null||isNaN(v)?"–":Number(v).toLocaleString("en-US",{maximumFractionDigits:0});
+
+fetch("data/history.json").then(r=>{if(!r.ok)throw 0;return r.json()})
+  .then(j=>{DATA=j.map(r=>({...r,weight_pct:parseFloat(r.weight_pct),shares:parseFloat(r.shares)}));init();})
+  .catch(()=>{document.getElementById("stamp").textContent="";
+    document.querySelector(".wrap").insertAdjacentHTML("beforeend","");
+    document.getElementById("tape").innerHTML="";
+    document.getElementById("wChart").closest(".card").innerHTML=
+      '<div class="empty">아직 기록된 데이터가 없습니다.<br>GitHub Actions가 처음 실행된 뒤(또는 Actions 탭에서 Run workflow를 눌러 수동 실행한 뒤) 몇 분 후 새로고침 해주세요.</div>';
+    document.getElementById("sChart").closest(".card").remove();
+    document.getElementById("tbl").closest(".card").remove();
+  });
+
+function init(){
+  // ETF 탭
+  const seg=document.getElementById("etfSeg");
+  ETFS.forEach(e=>{
+    const b=document.createElement("button");b.textContent=e;
+    b.onclick=()=>{etf=e;render();};seg.appendChild(b);
+  });
+  render();
+}
+
+function rowsFor(e){ return DATA.filter(r=>r.etf===e); }
+function datesFor(rows){ return [...new Set(rows.map(r=>r.date))].sort(); }
+
+function render(){
+  // 탭 상태
+  [...document.getElementById("etfSeg").children].forEach(b=>b.classList.toggle("on",b.textContent===etf));
+
+  const rows=rowsFor(etf), dates=datesFor(rows);
+  const latestDate=dates[dates.length-1], prevDate=dates[dates.length-2];
+  const latest=rows.filter(r=>r.date===latestDate);
+  const prev=Object.fromEntries(rows.filter(r=>r.date===prevDate).map(r=>[r.ticker,r]));
+
+  document.getElementById("stamp").textContent =
+    latestDate ? `${etf} 최신 기준일 ${latestDate} · 기록일수 ${dates.length}일 · 출처: ${latest[0]?.source||""}` : "";
+
+  // 티커 버튼 (해당 ETF의 비중 상위 12개 + 선택된 것)
+  const top=[...latest].sort((a,b)=>b.weight_pct-a.weight_pct).slice(0,12).map(r=>r.ticker);
+  const all=[...new Set([...picked,...top])];
+  const tb=document.getElementById("tickerBtns"); tb.innerHTML="";
+  all.forEach((t,i)=>{
+    const b=document.createElement("button"); b.textContent=t;
+    b.style.color=PALETTE[i%PALETTE.length];
+    b.classList.toggle("on",picked.has(t));
+    b.onclick=()=>{picked.has(t)?picked.delete(t):picked.add(t);render();};
+    tb.appendChild(b);
+  });
+
+  // 델타 테이프 (선택 티커의 최근 d/d 비중 변화, bp)
+  const tape=document.getElementById("tape"); tape.innerHTML="";
+  [...picked].forEach(t=>{
+    const cur=latest.find(r=>r.ticker===t), pv=prev[t];
+    if(!cur) return;
+    const d = pv&&cur.weight_pct!=null&&pv.weight_pct!=null ? (cur.weight_pct-pv.weight_pct)*100 : null;
+    const cls = d==null?"flat":(d>0.5?"pos":(d<-0.5?"neg":"flat"));
+    const sign = d==null?"":(d>0?"+":"");
+    tape.insertAdjacentHTML("beforeend",
+      `<div class="chip"><b>${etf}·${t}</b> ${fmt(cur.weight_pct)}% <span class="d ${cls}">${d==null?"신규":sign+fmt(d,1)+"bp"}</span></div>`);
+  });
+
+  drawCharts(rows,dates);
+  drawTable(latest,prev,prevDate,latestDate);
+
+  document.getElementById("foot").innerHTML =
+    `데이터 출처: iShares/BlackRock (SOXX), Invesco (SOXQ), VanEck (SMH) 각 운용사 공식 일별 holdings 공시 파일. 운용사 파일 수집 실패 시 stockanalysis.com(운용사 EOD 데이터 재게시)을 백업 소스로 사용하며, 각 기록의 실제 출처는 data/history.csv의 source 열에 저장됩니다.<br>` +
+    `<span class="src">SOXX: ishares.com/us/products/239705 · SOXQ: invesco.com (ticker=SOXQ) · SMH: vaneck.com/us/en/investments/semiconductor-etf-smh</span>`;
+}
+
+function seriesFor(rows,dates,field){
+  return [...picked].map((t,i)=>({
+    label:t,
+    data:dates.map(d=>{const r=rows.find(x=>x.date===d&&x.ticker===t);return r?r[field]:null;}),
+    borderColor:PALETTE[i%PALETTE.length], backgroundColor:PALETTE[i%PALETTE.length],
+    spanGaps:true, tension:.15, pointRadius:2.5, borderWidth:2
+  }));
+}
+
+function drawCharts(rows,dates){
+  const opts=y=>({responsive:true,maintainAspectRatio:false,
+    interaction:{mode:"index",intersect:false},
+    plugins:{legend:{labels:{font:{family:"'IBM Plex Mono'"},boxWidth:10}}},
+    scales:{x:{ticks:{font:{family:"'IBM Plex Mono'",size:11}},grid:{color:"#EDEFF3"}},
+            y:{ticks:{font:{family:"'IBM Plex Mono'",size:11},callback:v=>y==="w"?v+"%":Number(v).toLocaleString()},grid:{color:"#EDEFF3"}}}});
+  if(wChart)wChart.destroy(); if(sChart)sChart.destroy();
+  wChart=new Chart(document.getElementById("wChart"),{type:"line",
+    data:{labels:dates,datasets:seriesFor(rows,dates,"weight_pct")},options:opts("w")});
+  sChart=new Chart(document.getElementById("sChart"),{type:"line",
+    data:{labels:dates,datasets:seriesFor(rows,dates,"shares")},options:opts("s")});
+  document.getElementById("wTitle").textContent=`${etf} — 비중 (%) 추이`;
+  document.getElementById("sTitle").textContent=`${etf} — 보유주식수 추이`;
+}
+
+function drawTable(latest,prev,prevDate,latestDate){
+  document.getElementById("tTitle").textContent =
+    `${etf} — 최신 보유 현황 ${latestDate||""}` + (prevDate?` (Δ = ${prevDate} 대비)`:"");
+  const sorted=[...latest].sort((a,b)=>b.weight_pct-a.weight_pct);
+  let html=`<tr><th>Ticker</th><th>Name</th><th>비중 %</th><th>Δ비중 bp</th><th>주식수</th><th>Δ주식수</th></tr>`;
+  sorted.forEach(r=>{
+    const pv=prev[r.ticker];
+    const dw=pv&&r.weight_pct!=null&&pv.weight_pct!=null?(r.weight_pct-pv.weight_pct)*100:null;
+    const ds=pv&&r.shares!=null&&pv.shares!=null?r.shares-pv.shares:null;
+    const cls=v=>v==null?"":(v>0?' style="color:var(--up)"':(v<0?' style="color:var(--down)"':""));
+    html+=`<tr class="${picked.has(r.ticker)?"hl":""}">
+      <td>${r.ticker}</td><td class="name">${r.name||""}</td>
+      <td>${fmt(r.weight_pct)}</td><td${cls(dw)}>${dw==null?"–":(dw>0?"+":"")+fmt(dw,1)}</td>
+      <td>${fmtInt(r.shares)}</td><td${cls(ds)}>${ds==null?"–":(ds>0?"+":"")+fmtInt(ds)}</td></tr>`;
+  });
+  document.getElementById("tbl").innerHTML=html;
+}
+</script>
+</body>
+</html>
