@@ -3,7 +3,7 @@ name: ETF Holdings Daily Tracker
 on:
   schedule:
     # 매일 UTC 12:00 = 한국시간 저녁 9시
-    - cron: "0 12 * * *"
+    - cron: "0 3 * * *"
   workflow_dispatch: {}   # Actions 탭에서 수동 실행 가능
 
 permissions:
