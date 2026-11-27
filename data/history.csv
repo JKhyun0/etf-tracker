@@ -10649,3 +10649,78 @@
 2026-11-26,SOXX,TLV:TSEM,Tower Semiconductor Ltd.,0.94,2564940.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-26T11:34:27+00:00
 2026-11-26,SOXX,TSM,Taiwan Semiconductor Manufacturing Company Limited,3.39,3255632.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-26T11:34:27+00:00
 2026-11-26,SOXX,TXN,Texas Instruments Incorporated,5.21,6772120.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-26T11:34:27+00:00
+2026-11-27,SMH,ADI,"Analog Devices, Inc.",4.55,8301613.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,ALAB,"Astera Labs, Inc.",0.86,2568563.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,AMAT,"Applied Materials, Inc.",4.19,7384174.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,AMD,"Advanced Micro Devices, Inc.",5.35,7388714.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,ARM,Arm Holdings plc,0.9,3162452.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,ASML,ASML Holding N.V.,4.69,2003529.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,AVGO,Broadcom Inc.,6.35,12030854.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,CDNS,"Cadence Design Systems, Inc.",2.45,4718090.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,INTC,Intel Corporation,3.13,32587287.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,KLAC,KLA Corporation,4.43,18927732.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,LRCX,Lam Research Corporation,3.77,10961499.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,MCHP,Microchip Technology Incorporated,0.81,8154368.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,MPWR,"Monolithic Power Systems, Inc.",1.5,717198.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,MRVL,"Marvell Technology, Inc.",3.17,13737172.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,MU,"Micron Technology, Inc.",4.14,3746151.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,NVDA,NVIDIA Corporation,18.75,68855165.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,NXPI,NXP Semiconductors N.V.,1.46,3470969.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,ON,ON Semiconductor Corporation,0.54,5022867.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,QCOM,QUALCOMM Incorporated,4.75,16434109.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,SKHY,SK hynix Inc.,3.8,19383855.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,SNPS,"Synopsys, Inc.",2.42,3323674.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,STM,STMicroelectronics N.V.,0.97,13877481.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,TER,"Teradyne, Inc.",0.95,2546169.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,TSM,Taiwan Semiconductor Manufacturing Company Limited,10.07,16452679.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SMH,TXN,Texas Instruments Incorporated,5.99,13234747.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,ADI,"Analog Devices, Inc.",4.52,361364.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,ALAB,"Astera Labs, Inc.",1.97,257570.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,AMAT,"Applied Materials, Inc.",3.69,285503.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,AMD,"Advanced Micro Devices, Inc.",4.59,277904.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,ARM,Arm Holdings plc,1.39,215859.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,ASML,ASML Holding N.V.,4.12,77173.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,AVGO,Broadcom Inc.,10.63,883328.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,COHR,Coherent Corp.,2.28,290827.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,CRDO,Credo Technology Group Holding Ltd,1.19,279038.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,GFS,GLOBALFOUNDRIES Inc.,1.19,814746.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,INTC,Intel Corporation,3.2,1461790.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,KLAC,KLA Corporation,3.98,745734.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,LRCX,Lam Research Corporation,3.4,433986.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,MCHP,Microchip Technology Incorporated,1.82,806244.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,MPWR,"Monolithic Power Systems, Inc.",3.47,73027.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,MRVL,"Marvell Technology, Inc.",3.25,618127.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,MU,"Micron Technology, Inc.",6.87,273003.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,NVDA,NVIDIA Corporation,11.04,1778011.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,NXPI,NXP Semiconductors N.V.,3.58,374408.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,ON,ON Semiconductor Corporation,1.42,578020.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,Q,"Qnity Electronics, Inc.",1.36,310681.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,QCOM,QUALCOMM Incorporated,5.06,767462.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,TER,"Teradyne, Inc.",1.98,232137.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,TSM,Taiwan Semiconductor Manufacturing Company Limited,4.4,315049.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXQ,TXN,Texas Instruments Incorporated,5.18,501555.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,ADI,"Analog Devices, Inc.",4.86,4779115.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,ALAB,"Astera Labs, Inc.",1.98,3401135.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,AMAT,"Applied Materials, Inc.",3.59,3774199.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,AMD,"Advanced Micro Devices, Inc.",9.12,7350664.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,ASML,ASML Holding N.V.,1.55,390438.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,AVGO,Broadcom Inc.,8.59,9346583.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,CRDO,Credo Technology Group Holding Ltd,1.32,4048595.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,ENTG,"Entegris, Inc.",1.43,3634816.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,INTC,Intel Corporation,6.43,38656088.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,KLAC,KLA Corporation,4.05,9864382.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,LRCX,Lam Research Corporation,3.24,5738373.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,MCHP,Microchip Technology Incorporated,2.25,12764465.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,MPWR,"Monolithic Power Systems, Inc.",4.14,1134402.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,MRVL,"Marvell Technology, Inc.",3.27,8173740.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,MTSI,"MACOM Technology Solutions Holdings, Inc.",1.04,1702281.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,MU,"Micron Technology, Inc.",6.63,3609051.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,NVDA,NVIDIA Corporation,7.15,15678105.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,NXPI,NXP Semiconductors N.V.,4.57,6159772.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,ON,ON Semiconductor Corporation,1.78,9299678.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,QCOM,QUALCOMM Incorporated,5.23,10151954.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,SKHY,SK hynix Inc.,2.73,8044126.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,TER,"Teradyne, Inc.",2.41,3712468.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,TLV:TSEM,Tower Semiconductor Ltd.,0.93,2512403.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,TSM,Taiwan Semiconductor Manufacturing Company Limited,3.34,3188864.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
+2026-11-27,SOXX,TXN,Texas Instruments Incorporated,5.48,6633341.0,,"stockanalysis.com (백업 소스, 운용사 EOD 데이터 재게시)",2026-11-27T11:28:59+00:00
